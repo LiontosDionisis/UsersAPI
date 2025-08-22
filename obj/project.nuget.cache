@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "oLvtVvi84fU=",
+  "dgSpecHash": "YDGRk5s2KZg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\usersteachers\\UsersTeachers.csproj",
+  "projectFilePath": "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\UsersTeachers\\UsersTeachers.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Dioni\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\Dioni\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
