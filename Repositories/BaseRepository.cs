@@ -45,7 +45,7 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     public async Task<T> GetAsync(int id)
     {
         var entity = await _dbSet.FindAsync(id);
-        return entity;
+        return entity!;
     }
 
     public async Task<int> GetCountAsync()
