@@ -1,5 +1,6 @@
 namespace UsersTeachers.Repositories;
 
+
 public interface IBaseRepository<T>
 {
     Task<IEnumerable<T>> GetAllAsync();
