@@ -6,6 +6,8 @@ using System.Security.Claims;
 using System.Text;
 using UsersTeachers.Security;
 using UsersTeachers.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 
 namespace UsersTeachers.Services;
@@ -19,21 +21,64 @@ public class UserService : IUserService
 
     public UserService(IUnitOfWork unitOfWork, ILogger<UserService>? logger, IMapper mapper)
     {
-
+        _unitOfWork = unitOfWork;
+        _logger = logger;
+        _mapper = mapper;
     }
     public string CreateUserToken(int userId, string? userName, string? email, UserRole? userRole, string? appSecurityKey)
     {
-        throw new NotImplementedException();
+        var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSecurityKey!));
+        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var claimsInfo = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, userName!),
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(ClaimTypes.Email, email!),
+            new Claim(ClaimTypes.Role, userRole.ToString()!)
+        };
+
+        var jwtSecurityToken = new JwtSecurityToken(null, null, claimsInfo, DateTime.UtcNow, DateTime.UtcNow.AddHours(3), signingCredentials);
+
+        var userToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+
+        return userToken;
     }
 
-    public Task DeleteUserAsync(int id)
+    public async Task DeleteUserAsync(int id)
     {
-        throw new NotImplementedException();
+        bool deleted;
+
+        try
+        {
+            deleted = await ((IBaseRepository<User>)_unitOfWork!.Users).DeleteAsync(id);
+            if (!deleted)
+            {
+                throw new Exception("User was not found");
+            }
+        }
+        catch (Exception e)
+        {
+            _logger!.LogError("{Message}{Exception}", e.Message, e.StackTrace);
+            throw;
+        }
     }
 
-    public Task<User?> GetUserByUsernameAsync(string usernmame)
+    public async Task<User?> GetUserByUsernameAsync(string usernmame)
     {
-        throw new NotImplementedException();
+        User user;
+
+        try
+        {
+            user = await _unitOfWork!.Users.GetByUsernameAsync(usernmame);
+            _logger!.LogInformation("{Message}", "User: " + user + " found and returned.");
+            return user;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("{Message}{Exception}", e.Message, e.StackTrace);
+            throw;
+        }
     }
 
     public async Task<User?> SignUpUserAsync(UserSignupDTO dto)
@@ -97,7 +142,7 @@ public class UserService : IUserService
 
         try
         {
-            existingUser = await ((IBaseRepository<User>)_unitOfWork.Users).GetAsync(userId);
+            existingUser = await ((IBaseRepository<User>)_unitOfWork!.Users).GetAsync(userId);
             if (existingUser == null) return null;
 
             var userToUpdate = _mapper!.Map<User>(dto);
@@ -115,9 +160,28 @@ public class UserService : IUserService
         return user;
     }
 
-    public Task<User?> UpdateUserPatchAsync(int userId, UserPatchDTO dto)
+    public async Task<User?> UpdateUserPatchAsync(int userId, UserPatchDTO dto)
     {
-        throw new NotImplementedException();
+        User? existingUser;
+        try
+        {
+            existingUser = await ((IBaseRepository<User>)_unitOfWork!.Users).GetAsync(userId);
+            if (existingUser == null) return null;
+
+            if(dto.Username != null) existingUser.Username = dto.Username;
+            if(dto.Email != null) existingUser.Email = dto.Email;
+            if (!string.IsNullOrWhiteSpace(dto.Password)) existingUser.Password = EncryptionUtil.Encrypt(dto.Password!);
+
+            await _unitOfWork.SaveChangesAsync();
+            _logger!.LogInformation("{Message}", "User: " + existingUser + " updated!");
+
+            return existingUser;
+        }
+        catch (Exception e)
+        {
+            _logger!.LogError("{Message}{Exception}", e.Message, e.StackTrace);
+            throw;
+        }
     }
 
     public async Task<User?> VerifyAndGetUserAsync(UserLoginDTO dto)
@@ -127,7 +191,7 @@ public class UserService : IUserService
         try
         {
             user = await _unitOfWork!.Users.GetUserAsync(dto.Username!, dto.Password!);
-            _logger.LogInformation("{Message}", "User: " + user + " found and returned.");
+            _logger!.LogInformation("{Message}", "User: " + user + " found and returned.");
         }
         catch (Exception e)
         {

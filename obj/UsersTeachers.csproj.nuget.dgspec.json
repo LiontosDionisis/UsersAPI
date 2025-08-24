@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\UsersTeachers\\UsersTeachers.csproj": {}
+    "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\usersteachers\\UsersTeachers.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\UsersTeachers\\UsersTeachers.csproj": {
+    "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\usersteachers\\UsersTeachers.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\UsersTeachers\\UsersTeachers.csproj",
+        "projectUniqueName": "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\usersteachers\\UsersTeachers.csproj",
         "projectName": "UsersTeachers",
-        "projectPath": "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\UsersTeachers\\UsersTeachers.csproj",
+        "projectPath": "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\usersteachers\\UsersTeachers.csproj",
         "packagesPath": "C:\\Users\\Dioni\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\UsersTeachers\\obj\\",
+        "outputPath": "C:\\Users\\Dioni\\OneDrive\\Desktop\\Projects\\UsersTeachersAPI\\usersteachers\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -58,6 +58,10 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.0.3, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
